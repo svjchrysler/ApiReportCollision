@@ -1,9 +1,13 @@
 package packages
 
-type Person struct {
-	Name string
-}
+import (
+	"github.com/jinzhu/gorm"
+)
 
-func (p Person) GetName() string {
-	return p.Name
+//Person class
+type Person struct {
+	gorm.Model
+	Users    User
+	Name     string
+	LastName string
 }
