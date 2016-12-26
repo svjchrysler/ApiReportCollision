@@ -1,12 +1,12 @@
 package packages
 
-import (
-	"github.com/jinzhu/gorm"
-)
+import "time"
 
 //User class
 type User struct {
-	gorm.Model
-	CI       int32
-	Password string
+	ID        int64     `gorm:"primary_key"`
+	CI        int32     `gorm:"not null;unique"`
+	Password  string    `gorm:"not null"`
+	CreateAt  time.Time `gorm:"not null"`
+	UpdatedAt time.Time
 }

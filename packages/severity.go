@@ -1,11 +1,7 @@
 package packages
 
-import (
-	"github.com/jinzhu/gorm"
-)
-
 //Severity class
 type Severity struct {
-	gorm.Model
-	Name string
+	ID   int64  `gorm:"primary_key"`
+	Name string `gorm:"not null"`
 }

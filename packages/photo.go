@@ -1,12 +1,12 @@
 package packages
 
-import (
-	"github.com/jinzhu/gorm"
-)
+import "time"
 
 //Photo class
 type Photo struct {
-	gorm.Model
-	Accidents Accident
-	Filename  string
+	ID         int64     `gorm:"primary_key"`
+	AccidentID int64     `gorm:"not null"`
+	Filename   string    `gorm:"not null"`
+	CreateAt   time.Time `gorm:"not null"`
+	UpdatedAt  time.Time
 }

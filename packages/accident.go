@@ -1,18 +1,17 @@
 package packages
 
-import (
-	"time"
-
-	"github.com/jinzhu/gorm"
-)
+import "time"
 
 //Accident class
 type Accident struct {
-	gorm.Model
-	RegistrationDate time.Time
-	DateAccident     time.Time
-	Time             time.Time
-	People           Person
-	Climates         Climate
-	Severities       Severity
+	ID           int64 `gorm:"primary_key"`
+	WeatherID    int64 `gorm:"not null"`
+	PersonID     int64
+	SeverityID   int64
+	DateAccident time.Time `gorm:"not null"`
+	Time         time.Time `gorm:"not null"`
+	Latitude     float64   `gorm:"not null"`
+	Longitude    float64   `gorm:"not null"`
+	CreateAt     time.Time `gorm:"not null"`
+	UpdatedAt    time.Time
 }

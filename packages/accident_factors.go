@@ -1,7 +1,11 @@
 package packages
 
+import "time"
+
 //AccidentFactors class
 type AccidentFactors struct {
-	AccidentID Accident `gorm:"primary_key"`
-	FactorsID  Factors  `gorm:"primary_key"`
+	AccidentID int64     `gorm:"primary_key"`
+	FactorsID  int64     `gorm:"primary_key"`
+	CreateAt   time.Time `gorm:"not null"`
+	UpdatedAt  time.Time
 }
