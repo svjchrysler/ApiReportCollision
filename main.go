@@ -5,6 +5,14 @@ import (
 
 	"fmt"
 
+	"time"
+
+	"crypto/sha1"
+
+	"strconv"
+
+	"strings"
+
 	"./packages"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -24,41 +32,56 @@ const (
 	PASSWORD = "k3yl0gg3r"
 )
 
-/*
-func GetApiIris(ctx *iris.Context) {
+//PostPersonAPI save data Person
+func PostPersonAPI(ctx *iris.Context) {
+	var person packages.Person
+	person.Name = ctx.URLParam("name")
+	person.Lastname = ctx.URLParam("last_name")
+	person.CreateAt = time.Now()
 
 	db := conection()
 
-	var rest Person
-
-	db.Table("people").Find(&rest)
-
-	err := ctx.JSON(iris.StatusOK, rest)
-	if err != nil {
-		log.Fatal(err)
-		panic(err)
-	}
-}*/
-
-//GetAPI data for Android
-func GetAPI(ctx *iris.Context) {
-	user := packages.User{CI: 9684203, Password: "hola"}
-	err := ctx.JSON(iris.StatusOK, user)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-/*func PostPerson(ctx *iris.Context) {
-	var person Person
-	name := ctx.URLParam("name")
-	db := conection()
-	person.Name = name
 	db = db.Create(&person)
+
+	fmt.Print(person.ID)
+
 	if db.Error != nil {
 		panic(db.Error)
 	}
-}*/
+}
+
+//PostUserAPI save data User
+func PostUserAPI(ctx *iris.Context) {
+	var user packages.User
+	user.CI, _ = ctx.URLParamInt("ci")
+	user.Password = GetSha1(ctx.URLParam("password"))
+	user.CreateAt = time.Now()
+
+	db := conection()
+
+	db = db.Create(&user)
+
+	fmt.Print(user.ID)
+
+	if db.Error != nil {
+		panic(db.Error)
+	}
+}
+
+//GetSha1 password encryct
+func GetSha1(password string) string {
+	h := sha1.New()
+	h.Write([]byte(password))
+	bs := h.Sum(nil)
+
+	aux := make([]string, len(bs))
+
+	for i := range bs {
+		aux[i] = strconv.Itoa(int(bs[i]))
+	}
+
+	return strings.Join(aux, "")
+}
 
 func conection() *gorm.DB {
 	conexion := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=%s password=%s", HOST, USER, DB, SSL, PASSWORD)
@@ -131,18 +154,7 @@ func main() {
 
 	Migrations()
 
-	/*iris.Get("/", GetApiIris)*/
-
-	iris.Get("/api", GetAPI)
-
-	/*	iris.Post("/person", PostPerson)*/
-
-	/*iris.Get("/", func(c *iris.Context) {
-		c.JSON(iris.StatusOK, iris.Map{
-			"Name":     "Iris",
-			"Released": "13 March 2016",
-		})
-	})*/
+	iris.Post("/user/register", PostUserAPI)
 
 	iris.Listen(":8080")
 }
